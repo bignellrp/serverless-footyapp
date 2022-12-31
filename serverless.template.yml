@@ -1,0 +1,6 @@
+name: serverless-footyapp
+org: rikbignell
+description: Serverless Footyapp
+keywords: aws, serverless, faas, lambda, python, flask
+repo: https://github.com/bignellrp/serverless-footyapp
+license: MIT

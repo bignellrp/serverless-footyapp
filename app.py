@@ -12,5 +12,5 @@ app.register_blueprint(index_blueprint)
 #app.register_blueprint(result_blueprint)
 #app.register_blueprint(score_blueprint)
 
-# if __name__ == "__main__":
-#     app.run(host="127.0.0.1", debug=False, port=5000)
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", debug=False, port=5000)

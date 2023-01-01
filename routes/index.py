@@ -13,10 +13,10 @@ def index():
     Takes in available players from a flask form 
     and returns an even set of two 5 a side teams'''
 
-    players = player()
-    player_names = players.player_names()
-    player_count = players.player_count()
-    #return render_template('index.html')
-    return render_template('index.html', 
-                            player_names = player_names, 
-                            player_count = player_count)
+    # players = player()
+    # player_names = players.player_names()
+    # player_count = players.player_count()
+    return render_template('index.html')
+    # return render_template('index.html', 
+    #                         player_names = player_names, 
+    #                         player_count = player_count)

@@ -180,6 +180,7 @@ class results():
         self.df = get_df(table="results_table")
         self.df['Date'] = pd.to_datetime(self.df.Date, format='%Y%m%d', errors='ignore')
 
+
     def all_results(self):
         '''Get all results including column names'''
         self.all_results = self.df

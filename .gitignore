@@ -3,3 +3,4 @@ node_modules
 */__pycache__/*
 serverless_sdk
 package*.json
+s_api.py

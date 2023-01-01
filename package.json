@@ -1,8 +1,4 @@
 {
-  "name": "serverless-footyapp",
-  "version": "1.0.0",
-  "description": "Serverless Footyapp",
-  "author": "Rik Bignell",
   "devDependencies": {
     "serverless-python-requirements": "^6.0.0",
     "serverless-wsgi": "^3.0.1"

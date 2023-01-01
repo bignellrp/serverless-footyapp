@@ -4,7 +4,8 @@ service: serverless-footyapp
 frameworkVersion: '3'
 
 custom:
-  tableName: 'users-table-${sls:stage}'
+  playertableName: 'player_table'
+  resultstableName: 'results_table'
   wsgi:
     app: app.app
 
@@ -24,9 +25,11 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - Fn::GetAtt: [ UsersTable, Arn ]
+            - Fn::GetAtt: [ PlayerTable, Arn ]
+            - Fn::GetAtt: [ ResultsTable, Arn ]
   environment:
-    USERS_TABLE: ${self:custom.tableName}
+    PLAYER_TABLE: ${self:custom.playertableName}
+    RESULTS_TABLE: ${self:custom.resultstableName}
 
 functions:
   api:
@@ -40,16 +43,29 @@ plugins:
 
 resources:
   Resources:
-    UsersTable:
+    PlayerTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: userId
+          - AttributeName: Name
             AttributeType: S
         KeySchema:
-          - AttributeName: userId
+          - AttributeName: Name
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
+          ReadCapacityUnits: 2
           WriteCapacityUnits: 1
-        TableName: ${self:custom.tableName}
+        TableName: ${self:custom.playertableName}
+    ResultsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: Date
+            AttributeType: S
+        KeySchema:
+          - AttributeName: Date
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.resultstableName}

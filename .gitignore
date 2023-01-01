@@ -1,2 +1,5 @@
 node_modules
 .serverless
+*/__pycache__/*
+serverless_sdk
+package*.json

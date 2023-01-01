@@ -24,9 +24,9 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-          Resource: '*'
-            # - Fn::GetAtt: [ PlayerTable, Arn ]
-            # - Fn::GetAtt: [ ResultsTable, Arn ]
+          Resource:
+            - Fn::GetAtt: [ PlayerTable, Arn ]
+            - Fn::GetAtt: [ ResultsTable, Arn ]
   environment:
     PLAYER_TABLE: ${self:custom.playertableName}
     RESULTS_TABLE: ${self:custom.resultstableName}

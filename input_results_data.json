@@ -1,0 +1,21 @@
+[
+    {
+      "Date": "2023-01-01",
+      "Team A Result?": "1",
+      "Team B Result?": "1",
+      "Team A Total": "400",
+      "Team B Total": "400",
+      "Team A Player 1": "Player1",
+      "Team A Player 2": "Player2",
+      "Team A Player 3": "Player3",
+      "Team A Player 4": "Player4",
+      "Team A Player 5": "Player5",
+      "Team B Player 1": "Player6",
+      "Team B Player 2": "Player7",
+      "Team B Player 3": "Player8",
+      "Team B Player 4": "Player9",
+      "Team B Player 5": "Player10",
+      "Team A Colour": "black",
+      "Team B Colour": "white"
+    }
+]

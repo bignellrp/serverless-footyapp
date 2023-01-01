@@ -29,6 +29,11 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{{ url_for('index.index') }}">Automatic</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{{ url_for('compare.compare') }}">Manual</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{{ url_for('leaderboard.leaderboard') }}">Leaderboard</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{{ url_for('stats.stats') }}">Stats</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{{ url_for('score.score') }}">Score</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{{ url_for('playertotals.playertotals') }}">Totals</a></li>
                     </ul>
                 </div>
             </div>
@@ -40,6 +45,36 @@
                 <div class="row align-items-center no-gutters mb-4 mb-lg-5">
                     <div class="col-xl-8 col-lg-7">
                         <div class="featured-text text-center text-center">
+                            <form class="text-white-50 mx-auto mt-2 mb-5" method="POST" action="/">
+                                <table class="mx-auto text-lg-left" style="width: 50%">
+                                    <colgroup>
+                                        <col span="1" style="width: 20%;">
+                                        <col span="1" style="width: 30%;">
+                                    </colgroup>
+                                    <h2>Choose <span class="indextotalchecked">{{ player_count }}</span>:</h2>
+                                    {% if error %}
+                                    <div class="tool_tip"><h2> {{ error }} </h2></div>
+                                    {% endif %}
+                                    {% for name, playing in player_names %}
+                                    <tr class="form-check checkbox-slider--default">
+                                        <td>
+                                            <label>
+                                                <input class="single-checkbox" type="checkbox" 
+                                                {% if playing == "x" %} 
+                                                checked="true"
+                                                {% else %}
+                                                {% endif %}
+                                                name="available_players" value="{{ name }}">
+                                                <span>{{ name }}</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                                <input class="btn btn-primary js-scroll-trigger" type="submit" name="submit_button" value="Post">
+                                <input class="btn btn-primary js-scroll-trigger" type="submit" name="submit_button" value="Save">
+                                <input class="btn btn-primary js-scroll-trigger" type="submit" name="submit_button" value="Wipe">
+                            </form>
                         </div>
                     </div>
                 </div>

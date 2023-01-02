@@ -1,5 +1,5 @@
 from flask import render_template, Blueprint
-from services.get_spread import player
+#from services.get_spread import player
 
 index_blueprint = Blueprint('index', 
                             __name__, 

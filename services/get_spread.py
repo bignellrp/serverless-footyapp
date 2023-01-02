@@ -1,17 +1,5 @@
 import pandas as pd
 from dynamo_pandas import get_df
-#from services.lookup import lookup
-#from services.get_oscommand import GITBRANCH, IFBRANCH
-
-# if IFBRANCH in GITBRANCH:
-#         print("Using Pro Worksheet for Get Commands")
-#         ws_players = ss.worksheet('Players')
-#         ws_results = ss.worksheet('Results')
-# else:
-#         print("Using Dev Worksheet for Get Commands")
-#         ws_players = ss.worksheet('Dev Players')
-#         ws_results = ss.worksheet('Dev Results')
-
 
 class player():
 	

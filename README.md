@@ -21,4 +21,5 @@ serverless
 Deploy Now (y)
 python3 services/dynamodb_player_loader.py
 python3 services/dynamodb_results_loader.py
+sls info
 ```

@@ -8,6 +8,8 @@ custom:
   resultstableName: 'results_table'
   wsgi:
     app: app.app
+  pythonRequirements:
+    dockerizePip: true
 
 provider:
   name: aws

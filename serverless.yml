@@ -37,6 +37,8 @@ provider:
   environment:
     PLAYER_TABLE: ${self:custom.playertableName}
     RESULTS_TABLE: ${self:custom.resultstableName}
+    ##https://stackoverflow.com/questions/72539862/aws-lambda-adds-default-to-the-path-of-flasgger-apispec
+    STRIP_STAGE_PATH: yes
 
 functions:
   api:

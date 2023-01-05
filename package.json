@@ -1,4 +1,22 @@
 {
+  "name": "serverless-footyapp",
+  "version": "1.0.0",
+  "description": "A web app for managing a 5 a side footy team.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bignellrp/serverless-footyapp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bignellrp/serverless-footyapp/issues"
+  },
+  "homepage": "https://github.com/bignellrp/serverless-footyapp#readme",
   "devDependencies": {
     "serverless-python-requirements": "^6.0.0",
     "serverless-wsgi": "^3.0.1"

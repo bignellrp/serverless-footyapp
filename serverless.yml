@@ -3,6 +3,11 @@ app: serverless-footyapp
 service: serverless-footyapp
 frameworkVersion: '3'
 
+package:
+  exclude:
+    - node_modules/**
+    - venv/**
+
 custom:
   playertableName: 'player_table'
   resultstableName: 'results_table'

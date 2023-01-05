@@ -15,10 +15,12 @@ You must have your aws credentials configured as serverless will build the follo
 - DynamoDB (for now you need to manually run the loader commands below to fill the db with data)
 
 ```
-serverless plugin install -n serverless-wsgi
-serverless plugin install -n serverless-python-requirements
-serverless
-Deploy Now (y)
+npm init -f
+npm install --save-dev serverless-wsgi serverless-python-requirements
+virtualenv venv --python=python3
+source venv/bin/activate
+pip install -r requirements.txt
+sls deploy
 python3 services/dynamodb_player_loader.py
 python3 services/dynamodb_results_loader.py
 sls info

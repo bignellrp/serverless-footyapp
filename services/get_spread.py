@@ -159,21 +159,36 @@ class player():
         self.game_player_tally_with_score_and_index = game_player_tally
         return self.game_player_tally_with_score_and_index
 
-
 class results():
 
     def __init__(self):
         '''Initialise the class and get 
         all the values from the results table'''
         self.df = get_df(table="results_table")
+        ##Filter the data into a certain order to use iloc later
+        self.df = self.df.filter(['Date',
+                                'Team A Result?',
+                                'Team B Result?',
+                                'Team A Total',
+                                'Team B Total',
+                                'Team A Player 1',
+                                'Team A Player 2',
+                                'Team A Player 3',
+                                'Team A Player 4',
+                                'Team A Player 5',
+                                'Team B Player 1',
+                                'Team B Player 2',
+                                'Team B Player 3',
+                                'Team B Player 4',
+                                'Team B Player 5',
+                                'Team A Colour',
+                                'Team B Colour'])
         self.df['Date'] = pd.to_datetime(self.df.Date, format='%Y%m%d', errors='ignore')
-
 
     def all_results(self):
         '''Get all results including column names'''
         self.all_results = self.df
         return self.all_results
-
 
     def game_stats(self):
         '''Get all stats for stats page'''

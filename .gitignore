@@ -5,3 +5,6 @@ serverless_sdk
 s_api.py
 package-lock.json
 package.json
+.serverless-wsgi
+.gitignore
+wsgi_handler.py

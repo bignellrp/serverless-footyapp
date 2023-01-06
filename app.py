@@ -1,13 +1,9 @@
 from flask import Flask
-import os
 from routes import *
 
 app = Flask(__name__)
 
-##Generate random key for session
-key = os.urandom(12)
-app.config['SECRET_KEY'] = key
-app.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
+app.config['SECRET_KEY'] = 'notsosecretkey'
 
 ##Register the blueprint for each route
 app.register_blueprint(index_blueprint)

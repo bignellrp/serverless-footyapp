@@ -1,31 +1,25 @@
-# from services.get_date import next_wednesday
-# from services.get_spread import player,results
-# import boto3
+from services.get_date import next_wednesday
+from services.get_spread import player,results
+import boto3
 
-# dynamodb = boto3.client('dynamodb')
+player_table = boto3.resource('dynamodb').Table('player_table')
+results_table = boto3.resource('dynamodb').Table('results_table')
 
-# def colnum_string(n):
-#     '''Converts a number column value 
-#     into a letter column value
-#     E.g. Takes in 3 and outputs C 
-#     https://stackoverflow.com/questions/23861680/convert-spreadsheet-number-to-column-letter
-#     print(colnum_string(3))
-#     #output:C'''
-#     string = ""
-#     while n > 0:
-#         n, remainder = divmod(n - 1, 26)
-#         string = chr(65 + remainder) + string
-#     return string
 
-# def wipe_tally():
-#     '''Wipes the tally column for all players setting it to o'''
-#     sql = '''   UPDATE players 
-#                 SET "Playing"="o";'''
-#     c = conn.cursor()
-#     c.execute(sql)
-#     conn.commit()
-#     print("Wiping tally!")
-#     return update_all_formulas()
+def wipe_tally():
+    '''Wipes the tally attribute for all players setting it to o'''
+    #For loop to update all ids
+    #Invalid type for parameter AttributeUpdates.
+    #Playing, value: x, type: <class 'str'>, 
+    #valid types: <class 'dict'>
+    # player_table.update_item(   
+    #     Key={'id': '1'},
+    #     AttributeUpdates={
+    #         'Playing': 'x',
+    #     },
+    # )
+    print("Wiping tally!")
+    return #update_all_formulas()
 
 # def sort_players():
 #     '''Sorts players A to Z by Name'''
@@ -37,34 +31,32 @@
 #     print("Sorting Player Names!")
 #     return
 
-# def update_result(values):
-#     '''Function to update the result row 
-#     using the values from the results page'''
-#     values.append((next_wednesday)) #Add date to values
-#     dynamodb.put_item(
-#     {
-#       "Date": "?",
-#       "Team A Result?": "?",
-#       "Team B Result?": "?",
-#       "Team A Total": "?",
-#       "Team B Total": "?",
-#       "Team A Player 1": "?",
-#       "Team A Player 2": "?",
-#       "Team A Player 3": "?",
-#       "Team A Player 4": "?",
-#       "Team A Player 5": "?",
-#       "Team B Player 1": "?",
-#       "Team B Player 2": "?",
-#       "Team B Player 3": "?",
-#       "Team B Player 4": "?",
-#       "Team B Player 5": "?",
-#       "Team A Colour": "?",
-#       "Team B Colour": "?"
-#     }
-#               WHERE "Date" = ?;'''
-#     #Wipe tally once teams posted to the results page
-#     wipe_tally()
-#     return
+def update_result(values):
+    '''Function to update the result row 
+    using the values from the results page'''
+    results_table.update_item(   
+        Key={'Date': next_wednesday},
+        AttributeUpdates={
+            'Date': values[0],
+            'Team A Result?': values[1],
+            'Team B Result?': values[2],
+            'Team A Total': values[3],
+            'Team B Total': values[4],
+            'Team A Player 1': values[5],
+            'Team A Player 2': values[6],
+            'Team A Player 3': values[7],
+            'Team A Player 4': values[8],
+            'Team A Player 5': values[9],
+            'Team B Player 1': values[10],
+            'Team B Player 2': values[11],
+            'Team B Player 3': values[12],
+            'Team B Player 4': values[13],
+            'Team B Player 5': values[14],
+            'Team A Colour': values[15],
+            'Team B Colour': values[16]
+        },
+    )
+    return #wipe_tally() #Wipe tally once teams posted to the results page
 
 # def update_tally(values):
 #     '''Function to update the player 
@@ -79,33 +71,34 @@
 #     #return ws_players.update(range, values, major_dimension='COLUMNS')
 #     return
 
-# def append_result(values):
-#     '''Function to update the result 
-#     using the values from the results page
-#     Takes in values to be added 
-#     and returns the command for 
-#     appending the data'''
-#     dynamodb.put_item(
-#     {
-#       "Date": "?",
-#       "Team A Result?": "?",
-#       "Team B Result?": "?",
-#       "Team A Total": "?",
-#       "Team B Total": "?",
-#       "Team A Player 1": "?",
-#       "Team A Player 2": "?",
-#       "Team A Player 3": "?",
-#       "Team A Player 4": "?",
-#       "Team A Player 5": "?",
-#       "Team B Player 1": "?",
-#       "Team B Player 2": "?",
-#       "Team B Player 3": "?",
-#       "Team B Player 4": "?",
-#       "Team B Player 5": "?",
-#       "Team A Colour": "?",
-#       "Team B Colour": "?"
-#     }
-#     return wipe_tally() #Wipe tally once teams posted to the results page
+def append_result(values):
+    '''Function to update the result 
+    using the values from the results page
+    Takes in values to be added 
+    and returns the command for 
+    appending the data'''
+    results_table.put_item(
+        Item={
+        'Date': values[0],
+        'Team A Result?': values[1],
+        'Team B Result?': values[2],
+        'Team A Total': values[3],
+        'Team B Total': values[4],
+        'Team A Player 1': values[5],
+        'Team A Player 2': values[6],
+        'Team A Player 3': values[7],
+        'Team A Player 4': values[8],
+        'Team A Player 5': values[9],
+        'Team B Player 1': values[10],
+        'Team B Player 2': values[11],
+        'Team B Player 3': values[12],
+        'Team B Player 4': values[13],
+        'Team B Player 5': values[14],
+        'Team A Colour': values[15],
+        'Team B Colour': values[16]
+        }
+    )
+    return #wipe_tally() #Wipe tally once teams posted to the results page
 
 # def update_score_result(values):
 #     '''Function to update the result using 

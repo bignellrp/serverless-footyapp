@@ -1,6 +1,6 @@
 from flask import render_template, request, Blueprint, session, redirect, url_for
 from services.get_date import next_wednesday
-#import services.post_spread as post
+import services.post_spread as post
 from services.get_spread import results
 
 result_blueprint = Blueprint('result', 
@@ -26,34 +26,34 @@ def result():
             ##Pull data from flask session
             ##Taken from reddit 
             ##https://www.reddit.com/r/flask/comments/nsghsf/hidden_list/
-            # teama_passback = session['team_a']
-            # teamb_passback = session['team_b']
-            # scorea_passback = session['team_a_total']
-            # scoreb_passback = session['team_b_total']
+            teama_passback = session['team_a']
+            teamb_passback = session['team_b']
+            scorea_passback = session['team_a_total']
+            scoreb_passback = session['team_b_total']
 
             ##Build google_output list of values in a row
             google_output = []
             google_output.append((next_wednesday))
             google_output.append(str("-"))
             google_output.append(str("-"))
-            google_output.append(str("-"))
-            google_output.append(str("-"))
-            google_output.extend(str("-"))
-            google_output.extend(str("-"))
-            # google_output.append((scorea_passback))
-            # google_output.append((scoreb_passback))
-            # google_output.extend((teama_passback))
-            # google_output.extend((teamb_passback))
+            # google_output.append(str("-"))
+            # google_output.append(str("-"))
+            # google_output.extend(str("-"))
+            # google_output.extend(str("-"))
+            google_output.append((scorea_passback))
+            google_output.append((scoreb_passback))
+            google_output.extend((teama_passback))
+            google_output.extend((teamb_passback))
             google_output.append((teama_colour))
             google_output.append((teamb_colour))
 
             ##Now vars are safely in the google output remove 
             ##them from the session so they are not carried 
             ##from page to page unnecessarily.
-            # session.pop('team_a', None)
-            # session.pop('team_b', None)
-            # session.pop('team_a_total', None)
-            # session.pop('team_b_total', None)
+            session.pop('team_a', None)
+            session.pop('team_b', None)
+            session.pop('team_a_total', None)
+            session.pop('team_b_total', None)
 
             ##Gets Result data for validation
             result = results()
@@ -65,10 +65,10 @@ def result():
                 '''If the last row has next wednesdays date 
                 then replace the results.
                 Else append results on a new line'''
-                #result = post.update_result(google_output)
+                result = post.update_result(google_output)
                 print("Running update function")
             else:
-                #result = post.append_result(google_output)
+                result = post.append_result(google_output)
                 print("Running append function")
 
             ##Return Team A and Team B to the results template

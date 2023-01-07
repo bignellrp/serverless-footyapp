@@ -5,31 +5,21 @@ import boto3
 player_table = boto3.resource('dynamodb').Table('player_table')
 results_table = boto3.resource('dynamodb').Table('results_table')
 
-
 def wipe_tally():
-    '''Wipes the tally attribute for all players setting it to o'''
-    #For loop to update all ids
-    #Invalid type for parameter AttributeUpdates.
-    #Playing, value: x, type: <class 'str'>, 
-    #valid types: <class 'dict'>
-    # player_table.update_item(   
-    #     Key={'id': '1'},
-    #     AttributeUpdates={
-    #         'Playing': 'x',
-    #     },
-    # )
+    '''Wipes the tally attribute for 
+    all players setting it to o'''
+    players = player()
+    all_players = players.all_players()
+    for name,score in all_players:
+        player_table.update_item(
+            Key={'Name': name},
+            UpdateExpression="set Playing=:p",
+            ExpressionAttributeValues={
+                ':p': 'o'},
+            ReturnValues="UPDATED_NEW"
+        )
     print("Wiping tally!")
-    return #update_all_formulas()
-
-# def sort_players():
-#     '''Sorts players A to Z by Name'''
-#     #col = ws_players.find('Name')
-#     #ws_players.sort((col.col, 'asc'), range='A2:P1000')
-#     sql = '''SELECT * FROM players ORDER BY Name COLLATE NOCASE ASC;'''
-#     c = conn.cursor()
-#     c.execute(sql)
-#     print("Sorting Player Names!")
-#     return
+    return update_all_formulas()
 
 def update_result(values):
     '''Function to update the result row 
@@ -56,20 +46,23 @@ def update_result(values):
             'Team B Colour': values[16]
         },
     )
-    return #wipe_tally() #Wipe tally once teams posted to the results page
+    return wipe_tally() #Wipe tally once teams posted to the results page
 
-# def update_tally(values):
-#     '''Function to update the player 
-#     tally using the values from the index page
-#     Takes in values to be added as a list 
-#     to sheet and returns the gspread command 
-#     for updating the cell'''
-#     c = conn.cursor()
-#     for name in values:
-#         c.execute(f'UPDATE players SET Playing = "x" WHERE Name = "{name}"')
-#     conn.commit()
-#     #return ws_players.update(range, values, major_dimension='COLUMNS')
-#     return
+def update_tally(values):
+    '''Function to update the player 
+    tally using the values from the index page'''
+    players = player()
+    all_players = players.all_players()
+    for name,score in all_players:
+        player_table.update_item(
+            Key={'Name': name},
+            UpdateExpression="set Playing=:p",
+            ExpressionAttributeValues={
+                ':p': 'x'},
+            ReturnValues="UPDATED_NEW"
+        )
+    print("Updated tally!")
+    return
 
 def append_result(values):
     '''Function to update the result 
@@ -98,116 +91,85 @@ def append_result(values):
         'Team B Colour': values[16]
         }
     )
-    return #wipe_tally() #Wipe tally once teams posted to the results page
+    return wipe_tally() #Wipe tally once teams posted to the results page
 
-# def update_score_result(values):
-#     '''Function to update the result using 
-#     the values from the results page
-#     Takes in values to be added to sheet and 
-#     returns the gspread command for updating row
-#     Updates both Score A and Score B 
-#     from a list of two values.'''
-#     #row = ws_results.find('-')
-#     #row = row.row
-#     #col = ws_results.find('Team A Result?')
-#     #col = colnum_string(col.col) #Convert col number to letter
-#     #range = str(col)+str(row) #Put col letter with row number
-#     #values = [values, []] #Update func expecting list of lists
-#     values.append((next_wednesday)) #Add date to values
-#     sql = ''' UPDATE results
-#               SET   "Team A Result?" = ? ,
-# 	                "Team B Result?" = ?
-#               WHERE "Date" = ? AND "Team A Result?" = "-"; '''
-#     c = conn.cursor()
-#     c.execute(sql, values)
-#     conn.commit()
-#     #return ws_results.update(range, values, major_dimension='ROWS')
-#     update_all_formulas()
-#     return
+def update_score_result(values):
+    '''Function to update the result using 
+    the values from the results page
+    Takes in values to be added to sheet and 
+    returns the gspread command for updating row
+    Updates both Score A and Score B 
+    from a list of two values.'''
+    results_table.update_item(   
+        Key={'Date': next_wednesday, 'Team A Result?': '-'},
+        AttributeUpdates={
+            'Team A Result?': values[0],
+            'Team B Result?': values[1]}
+    )
+    update_all_formulas()
+    return
 
-# def update_scorea(value):
-#     '''Function to update the result using 
-#     the values from the results page
-#     Takes in value to be added to sheet and 
-#     returns the gspread command for updating cell'''
-#     #row = ws_results.find('-')
-#     #col = ws_results.find('Team A Result?')
-#     #return ws_results.update_cell(row.row, col.col, value)
-#     #value.append((next_wednesday)) #Add date to values
-#     sql = f''' UPDATE results
-#               SET   "Team A Result?" = {value}
-#               WHERE "Date" = "{next_wednesday}" AND "Team A Result?" = "-"; '''
-#     c = conn.cursor()
-#     c.execute(sql)
-#     conn.commit()
-#     update_all_formulas()
-#     return
+def update_scorea(value):
+    '''Function to update the result using 
+    the values from the results page
+    Takes in value to be added to the table updates item'''
+    results_table.update_item(   
+        Key={'Date': next_wednesday, 'Team A Result?': '-'},
+        AttributeUpdates={
+            'Team A Result?': value}
+    )
+    update_all_formulas()
+    return
 
-# def update_scoreb(value):
-#     '''Function to update the result using 
-#     the values from the results page
-#     Takes in value to be added to sheet and 
-#     returns the gspread command for updating cell'''
-#     #row = ws_results.find('-')
-#     #col = ws_results.find('Team B Result?')
-#     #return ws_results.update_cell(row.row, col.col, value)
-#     #value = [value, next_wednesday] #Add date to values
-#     sql = ''' UPDATE results
-#               SET   "Team B Result?" = ?
-#               WHERE "Date" = ? AND "Team B Result?" = "-"; '''
-#     c = conn.cursor()
-#     c.execute(sql, (value, next_wednesday))
-#     conn.commit()
-#     update_all_formulas()
-#     return
+def update_scoreb(value):
+    '''Function to update the result using 
+    the values from the results page
+    Takes in value to be added to the table updates item'''
+    results_table.update_item(   
+        Key={'Date': next_wednesday, 'Team A Result?': '-'},
+        AttributeUpdates={
+            'Team B Result?': value}
+    )
+    update_all_formulas()
+    return
 
-# def update_coloura(value):
-#     '''Function to update the colour using 
-#     the values from the results page
-#     Takes in value to be added to sheet and 
-#     returns the gspread command for updating cell'''
-#     #row = ws_results.find('-')
-#     #col = ws_results.find('Team A Colour')
-#     #return ws_results.update_cell(row.row, col.col, value)
-#     value = [value, next_wednesday] #Add date to values
-#     sql = ''' UPDATE results
-#               SET   "Team A Colour" = ?
-#               WHERE "Date" = ? AND "Team A Result?" = "-"; '''
-#     c = conn.cursor()
-#     c.execute(sql, value)
-#     conn.commit()
+def update_coloura(value):
+    '''Function to update the result using 
+    the values from the results page
+    Takes in value to be added to the table updates item'''
+    results_table.update_item(   
+        Key={'Date': next_wednesday, 'Team A Result?': '-'},
+        AttributeUpdates={
+            'Team A Colour': value}
+    )
+    update_all_formulas()
+    return
 
-# def update_colourb(value):
-#     '''Function to update the colour using 
-#     the values from the results page
-#     Takes in value to be added to sheet and 
-#     returns the gspread command for updating cell'''
-#     #row = ws_results.find('-')
-#     #col = ws_results.find('Team B Colour')
-#     #return ws_results.update_cell(row.row, col.col, value)
-#     value = [value, next_wednesday] #Add date to values
-#     sql = ''' UPDATE results
-#               SET   "Team B Colour" = ?
-#               WHERE "Date" = ? AND "Team A Result?" = "-"; '''
-#     c = conn.cursor()
-#     c.execute(sql, value)
-#     conn.commit()
+def update_colourb(value):
+    '''Function to update the result using 
+    the values from the results page
+    Takes in value to be added to the table updates item'''
+    results_table.update_item(   
+        Key={'Date': next_wednesday, 'Team A Result?': '-'},
+        AttributeUpdates={
+            'Team B Colour': value}
+    )
+    update_all_formulas()
+    return
 
-# def update_playing_status(player):
-#     '''Takes in a player 
-#     and adds x into the playing column'''
-#     #cell_name = ws_players.find(player) #Find the Players name and the row
-#     #clm_playing = ws_players.find('Playing') #Find the Playing column
-#     #ws_players.update_cell(cell_name.row, clm_playing.col, 'x')
-#     player = [player, next_wednesday] #Add date to values
-#     sql = ''' UPDATE players
-#               SET   "Playing" = "x"?
-#               WHERE "Name" = ?; '''
-#     c = conn.cursor()
-#     c.execute(sql, player)
-#     conn.commit()
-#     print("Updated playing status for:",player)
-#     return
+def update_playing_status(player):
+    '''Takes in a player 
+    and adds x into the playing column'''
+    #player = [player, next_wednesday] #Add date to values
+    player_table.update_item(
+        Key={'Name': player},
+        UpdateExpression="set Playing=:p",
+        ExpressionAttributeValues={
+            ':p': 'x'},
+        ReturnValues="UPDATED_NEW"
+    )
+    print("Updated playing status for:",player)
+    return
 
 # def swap_player(players):
 #     '''Takes in a list of two players
@@ -476,76 +438,63 @@ def append_result(values):
 #     return
 
 
-# def modify_playing_status(player):
-#     '''Takes in a player
-#     and adds o into the playing column'''
+def modify_playing_status(player):
+    '''Takes in a player
+    and adds o into the playing column'''
+    player_table.update_item(
+        Key={'Name': player},
+        UpdateExpression="set Playing=:p",
+        ExpressionAttributeValues={
+            ':p': 'o'},
+        ReturnValues="UPDATED_NEW"
+    )
+    print("Modified playing status for:",player)
+    return
 
-#     #Find the Players name and the row
-#     #cell_name = ws_players.find(player) 
+def add_new_player(player):
+    '''Appends New Row with a new 
+    player and generic score'''
 
-#     #Find the Playing column
-#     #clm_playing = ws_players.find('Playing') 
+    #Add generic score to playername
+    new_player = [player,int(77)] 
 
-#     #ws_players.update_cell(cell_name.row, 
-#     #                       clm_playing.col, 
-#     #                       'o')
-#     sql = f'''   UPDATE players 
-#                 SET "Playing" = "o"
-#                 WHERE "Name" = "{player}"; '''
-#     c = conn.cursor()
-#     c.execute(sql, player)
-#     conn.commit()
-#     print("Modified playing status for:",player)
-#     return
+    player_table.update_item(
+        Key={'Name': player},
+        UpdateExpression="set Name=:n, Total=:t",
+        ExpressionAttributeValues={
+            ':n': new_player[0],
+            ':t': new_player[1]},
+        ReturnValues="UPDATED_NEW"
+    )
+    print("Added new player called:",player)
+    update_all_formulas()
+    return
 
-# def add_new_player(player):
-#     '''Appends New Row with a new 
-#     player and generic score'''
+def remove_player(player):
+    '''Deletes player from player table'''
+    player_table.delete_item(
+        Key={'Name': player}
+    )
+    print("Deleted",player)
+    return
 
-#     #Add generic score to playername
-#     new_player = [player,int(77)] 
-
-#     #Should be a list of name and score
-#     #ws_players.append_row(new_player) 
-#     sql = ''' INSERT INTO players (
-#                             "Name",
-#                             "Total")
-#               VALUES (?,?);'''
-#     c = conn.cursor()
-#     c.execute(sql, new_player)
-#     conn.commit()
-#     print("Appended new row for:",new_player)
-#     #Run the copy formulas func using first element of list as name
-#     #return copy_formulas(new_player[0])
-#     update_all_formulas()
-#     return
-
-# def remove_player(player):
-#     '''Appends New Row with a new 
-#     player and generic score
-#     Expects two items in a list, Name and Score'''
-#     #cell_name = ws_players.find(player)
-#     #ws_players.delete_row(cell_name.row)
-#     sql = f''' DELETE FROM players
-#               WHERE "Name" = "{player}";'''
-#     c = conn.cursor()
-#     c.execute(sql)
-#     conn.commit()
-#     print("Deleted row for:",player)
-#     return
-
-# def update_wins():
-#     '''Updates formulas for wins'''
-#     players = player()
-#     player_names = players.all_players()
-#     c = conn.cursor()
-#     for name,total in player_names:
-#         print(f"Sending {name} for Win calculation.")
-#         calc = calc_wins(name)
-#         c.execute(f'UPDATE players SET Wins = {calc} WHERE Name = "{name}"')
-#     conn.commit()
-#     print("Updated Wins")
-#     return
+def update_wins():
+    '''Updates formulas for wins'''
+    players = player()
+    all_players = players.all_players()
+    for name,total in all_players:
+        print(f"Sending {name} for Win calculation.")
+        #calc = calc_wins(name)
+        calc = '1'
+        player_table.update_item(
+            Key={'Name': name},
+            UpdateExpression="set Wins=:w",
+            ExpressionAttributeValues={
+                ':w': calc},
+            ReturnValues="UPDATED_NEW"
+        )
+    print("Updated Wins")
+    return
 
 # def update_draws():
 #     '''Updates formulas for draws'''
@@ -637,16 +586,16 @@ def append_result(values):
 #     print("Updated Player Names")
 #     return
 
-# def update_all_formulas():
-#     '''Updates all formulas'''
-#     update_wins()
-#     update_draws()
-#     update_losses()
-#     update_score()
-#     update_played()
-#     #update_percent() #Guilio has a NONE result which breaks the update
-#     update_wpercent()
-#     return
+def update_all_formulas():
+    '''Updates all formulas'''
+    update_wins()
+    #update_draws()
+    #update_losses()
+    #update_score()
+    #update_played()
+    #update_percent() #Guilio has a NONE result which breaks the update
+    #update_wpercent()
+    return
 
 # def calc_wins(player):
 #     '''Calculate wins for each player

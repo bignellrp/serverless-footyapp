@@ -49,7 +49,7 @@ def index():
                         game_players.append((row[0] , int(row[1])))
 
                 ##Save the tally of available players
-                #result = post.update_tally(available_players)
+                result = post.update_tally(available_players)
                 print("Running tally function")
 
                 ##Takes in game_players and returns teams and totals
@@ -69,28 +69,8 @@ def index():
                                         scorea = team_a_total, 
                                         scoreb = team_b_total)
         elif request.form['submit_button'] == 'Save':
-            ##Use GetList to put the data 
-            ##from the index template into the array
             available_players = request.form.getlist('available_players')
-            ##Build a tally of available players 
-            ##to use as a running session
-            #game_player_tally = []
-            ##To update in a batch this requires 
-            ##the list to be alphabetical
-            ##Updating these one by one takes too long.
-            #post.sort_players()
-            # for row in all_players:
-            #     '''Takes in row of all_players 
-            #     and returns a tally of those players
-            #     that are available this week'''
-            #     if row[0] in available_players:
-            #         game_player_tally.append(("x"))
-            #     else:
-            #         game_player_tally.append(("o"))
-
-            ##Save the tally of available players
-            #result = post.update_tally(game_player_tally)
-            #result = post.update_tally(available_players)
+            result = post.update_tally(available_players)
             print("Running tally function")    
             return redirect(url_for('index.index'))
         elif request.form['submit_button'] == 'Wipe':

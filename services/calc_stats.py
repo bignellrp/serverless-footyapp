@@ -42,8 +42,9 @@ def calc_wins(player):
     COUNT(CASE WHEN "Team B Player 4" = '{player}' AND "Team A Result?" < "Team B Result?" THEN 1 END) +
     COUNT(CASE WHEN "Team B Player 5" = '{player}' AND "Team A Result?" < "Team B Result?" THEN 1 END)
         FROM results_df;'''
-    result = duckdb.query(sql).df()
-    result.to_records(index=False)
+    result = duckdb.query(sql)
+    result = str(result).strip()
+    result = result[-2:].strip()
     print(f'Calulated {player}s wins as {result}')
     return result
 
@@ -63,8 +64,9 @@ def calc_draws(player):
     COUNT(CASE WHEN "Team B Player 4" = '{player}' AND "Team A Result?" = "Team B Result?" THEN 1 END) +
     COUNT(CASE WHEN "Team B Player 5" = '{player}' AND "Team A Result?" = "Team B Result?" THEN 1 END)
         FROM results_df;'''
-    result = duckdb.query(sql).df()
-    result.to_records(index=False)
+    result = duckdb.query(sql)
+    result = str(result).strip()
+    result = result[-2:].strip()
     print(f'Calulated {player}s draws as {result}')
     return result
 
@@ -84,8 +86,9 @@ def calc_losses(player):
     COUNT(CASE WHEN "Team B Player 4" = '{player}' AND "Team A Result?" > "Team B Result?" THEN 1 END) +
     COUNT(CASE WHEN "Team B Player 5" = '{player}' AND "Team A Result?" > "Team B Result?" THEN 1 END)
         FROM results_df;'''
-    result = duckdb.query(sql).df()
-    result.to_records(index=False)
+    result = duckdb.query(sql)
+    result = str(result).strip()
+    result = result[-2:].strip()
     print(f'Calulated {player}s losses as {result}')
     return result
 
@@ -94,8 +97,9 @@ def calc_score(player):
     sql = f'''SELECT (Wins * 3 + Draws) 
             FROM player_df
             WHERE Name = '{player}';'''
-    result = duckdb.query(sql).df()
-    result.to_records(index=False)
+    result = duckdb.query(sql)
+    result = str(result).strip()
+    result = result[-2:].strip()
     print(f'Calulated {player}s score as {result}')
     return result
 
@@ -104,8 +108,9 @@ def calc_played(player):
     sql = f'''SELECT (Wins + Draws + Losses) 
             FROM player_df
             WHERE Name = '{player}';'''
-    result = duckdb.query(sql).df()
-    result.to_records(index=False)
+    result = duckdb.query(sql)
+    result = str(result).strip()
+    result = result[-2:].strip()
     print(f'Calulated {player}s games played as {result}')
     return result
 
@@ -114,8 +119,9 @@ def calc_percent(player):
     sql = f'''SELECT (Wins / Played * 100) 
             FROM players
             WHERE Name = '{player}';'''
-    result = duckdb.query(sql).df()
-    result.to_records(index=False)
+    result = duckdb.query(sql)
+    result = str(result).strip()
+    result = result[-2:].strip()
     print(f'Calulated {player}s percent calc as {result}')
     return result
 
@@ -125,7 +131,8 @@ def calc_wpercent(player):
         CASE WHEN Wins < 5 THEN 0 ELSE (Wins / Played * 100) END
             FROM player_df
             WHERE Name = '{player}';'''
-    result = duckdb.query(sql).df()
-    result.to_records(index=False)
+    result = duckdb.query(sql)
+    result = str(result).strip()
+    result = result[-2:].strip()
     print(f'Calulated {player}s win percentage as {result}')
     return result #All results seem to be zero

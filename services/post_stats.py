@@ -12,10 +12,11 @@ def update_formulas():
     '''Updates all forumulas'''
     update_wins()
     update_draws()
-    update_losses()
-    update_score()
-    update_percent()
-    update_wpercent()
+    ## Binder Error: No function matches the given name and argument types
+    #update_losses()
+    #update_score()
+    #update_percent()
+    #update_wpercent()
     print("Updated all formulas")
     return
 

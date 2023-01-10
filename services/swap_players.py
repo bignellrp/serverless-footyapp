@@ -1,5 +1,5 @@
 from services.get_date import next_wednesday
-from services.get_spread import player,results
+from services.get_data import player,results
 import boto3
 
 player_table = boto3.resource('dynamodb').Table('player_table')

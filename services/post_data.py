@@ -1,6 +1,6 @@
 from services.get_date import next_wednesday
-from services.get_spread import player,results
-from services.post_stats import update
+from services.get_data import player
+from services.post_stats import update_formulas
 import boto3
 
 player_table = boto3.resource('dynamodb').Table('player_table')
@@ -12,7 +12,7 @@ def wipe_tally():
     all players setting it to o'''
     players = player()
     all_players = players.all_players()
-    for name,score in all_players:
+    for name,totals in all_players:
         player_table.update_item(
             Key={'Name': name},
             UpdateExpression="set Playing=:p",
@@ -63,7 +63,7 @@ def update_result(values):
         },
     )
     wipe_tally()
-    update()
+    update_formulas()
     return
 
 def append_result(values):
@@ -94,7 +94,7 @@ def append_result(values):
         }
     )
     wipe_tally()
-    update()
+    update_formulas()
     return
 
 def update_score_result(values):
@@ -110,7 +110,7 @@ def update_score_result(values):
             'Team A Result?': values[0],
             'Team B Result?': values[1]}
     )
-    update()
+    update_formulas()
     return
 
 def update_scorea(value):
@@ -122,7 +122,7 @@ def update_scorea(value):
         AttributeUpdates={
             'Team A Result?': value}
     )
-    update()
+    update_formulas()
     return
 
 def update_scoreb(value):
@@ -134,7 +134,7 @@ def update_scoreb(value):
         AttributeUpdates={
             'Team B Result?': value}
     )
-    update()
+    update_formulas()
     return
 
 def update_coloura(value):
@@ -162,7 +162,6 @@ def update_colourb(value):
 def update_playing_status(player):
     '''Takes in a player 
     and adds x into the playing column'''
-    #player = [player, next_wednesday] #Add date to values
     player_table.update_item(
         Key={'Name': player},
         UpdateExpression="set Playing=:p",
@@ -189,8 +188,6 @@ def modify_playing_status(player):
 def add_new_player(player):
     '''Appends New Row with a new 
     player and generic score'''
-
-    #Add generic score to playername
     new_player = [player,int(77)] 
 
     player_table.update_item(
@@ -211,21 +208,3 @@ def remove_player(player):
     )
     print("Deleted",player)
     return
-
-# def update_player_totals(totals):
-#     '''Updates player totals from html'''
-#     c = conn.cursor()
-#     for name,total in totals:
-#         c.execute(f'UPDATE players SET "Total" = {total} WHERE Name = "{name}"')
-#     conn.commit()
-#     print("Updated Player Totals")
-#     return
-
-# def update_player_names(player):
-#     '''Updates player names from html'''
-#     c = conn.cursor()
-#     for oldname,newname in player:
-#         c.execute(f'UPDATE players SET "Name" = "{newname}" WHERE Name = "{oldname}"')
-#     conn.commit()
-#     print("Updated Player Names")
-#     return

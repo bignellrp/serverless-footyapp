@@ -1,6 +1,6 @@
 from flask import render_template, request, Blueprint
 #import services.post_spread as post
-from services.get_spread import results
+from services.get_data import results
 import re
 
 score_blueprint = Blueprint('score', 

@@ -1,7 +1,7 @@
 from flask import render_template, request, Blueprint, session, redirect, url_for
 from services.get_date import next_wednesday
-import services.post_spread as post
-from services.get_spread import results
+import services.post_data as post
+from services.get_data import results
 
 result_blueprint = Blueprint('result', 
                              __name__, 

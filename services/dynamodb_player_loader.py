@@ -22,16 +22,16 @@ with open('input_player_data.json') as json_file:
         WinPercentage = l['Win Percentage']
         response = table.put_item(
             Item = {
-                'Name':Name,
-                'Total':Total,
-                'Wins':Wins,
-                'Draws':Draws,
-                'Losses':Losses,
-                'Score':Score,
-                'Playing':Playing,
-                'Played':Played,
-                'Percent Calc':PercentCalc,
-                'Win Percentage':WinPercentage
+                'Name':{"S": Name},
+                'Total':{"N":Total},
+                'Wins':{"N":Wins},
+                'Draws':{"N":Draws},
+                'Losses':{"N":Losses},
+                'Score':{"N":Score},
+                'Playing':{"S":Playing},
+                'Played':{"N":Played},
+                'Percent Calc':{"N":PercentCalc},
+                'Win Percentage':{"N":WinPercentage}
             }
         )
         print("Put item succeeded")

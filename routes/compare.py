@@ -1,5 +1,5 @@
 from flask import render_template, request, Blueprint, session
-from services.get_spread import player
+from services.get_data import player
 
 compare_blueprint = Blueprint('compare', 
                               __name__, 

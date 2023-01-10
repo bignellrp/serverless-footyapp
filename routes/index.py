@@ -1,7 +1,7 @@
 from flask import render_template, \
                 request, Blueprint, session, redirect, url_for
-from services.get_spread import player
-import services.post_spread as post
+from services.get_data import player
+import services.post_data as post
 from services.get_even_teams import get_even_teams
 
 index_blueprint = Blueprint('index', 

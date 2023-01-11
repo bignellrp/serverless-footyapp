@@ -45,7 +45,7 @@ def calc_wins(player):
     result = duckdb.query(sql)
     result = str(result).strip()
     result = result[-2:].strip()
-    print(f'Calulated {player}s wins as {result}')
+    #print(f'Calulated {player}s wins as {result}')
     return result
 
 def calc_draws(player):
@@ -67,7 +67,7 @@ def calc_draws(player):
     result = duckdb.query(sql)
     result = str(result).strip()
     result = result[-2:].strip()
-    print(f'Calulated {player}s draws as {result}')
+    #print(f'Calulated {player}s draws as {result}')
     return result
 
 def calc_losses(player):
@@ -89,50 +89,5 @@ def calc_losses(player):
     result = duckdb.query(sql)
     result = str(result).strip()
     result = result[-2:].strip()
-    print(f'Calulated {player}s losses as {result}')
+    #print(f'Calulated {player}s losses as {result}')
     return result
-
-def calc_score(player):
-    '''Calculate score by Adding Wins to Draws'''
-    sql = f'''SELECT (Wins * 3 + Draws) 
-            FROM player_df
-            WHERE Name = '{player}';'''
-    result = duckdb.query(sql)
-    result = str(result).strip()
-    result = result[-2:].strip()
-    print(f'Calulated {player}s score as {result}')
-    return result
-
-def calc_played(player):
-    '''Calculate Played by Adding Wins to Draws to Losses'''
-    sql = f'''SELECT (Wins + Draws + Losses) 
-            FROM player_df
-            WHERE Name = '{player}';'''
-    result = duckdb.query(sql)
-    result = str(result).strip()
-    result = result[-2:].strip()
-    print(f'Calulated {player}s games played as {result}')
-    return result
-
-def calc_percent(player):
-    '''Calculate Percentage Calc'''
-    sql = f'''SELECT (Wins / Played * 100) 
-            FROM players
-            WHERE Name = '{player}';'''
-    result = duckdb.query(sql)
-    result = str(result).strip()
-    result = result[-2:].strip()
-    print(f'Calulated {player}s percent calc as {result}')
-    return result
-
-def calc_wpercent(player):
-    '''Calculate Win Percentage'''
-    sql = f'''SELECT 
-        CASE WHEN Wins < 5 THEN 0 ELSE (Wins / Played * 100) END
-            FROM player_df
-            WHERE Name = '{player}';'''
-    result = duckdb.query(sql)
-    result = str(result).strip()
-    result = result[-2:].strip()
-    print(f'Calulated {player}s win percentage as {result}')
-    return result #All results seem to be zero

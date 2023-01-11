@@ -192,10 +192,20 @@ def add_new_player(player):
 
     player_table.update_item(
         Key={'Name': player},
-        UpdateExpression="set Name=:n, Total=:t",
+        UpdateExpression="set Name=:n, Total=:t, Wins=:w, Draws=:d, Losses=:l, Score=:s, Played=:p, #pc=:pc, #wp=:wp",
+        ExpressionAttributeNames={
+            '#pc': 'Percent Calc',
+            '#wp': 'Win Percentage'},
         ExpressionAttributeValues={
             ':n': new_player[0],
-            ':t': new_player[1]},
+            ':t': new_player[1],
+            ':w': '0',
+            ':d': '0',
+            ':l': '0',
+            ':s': '0',
+            ':p': '0',
+            ':pc': '0',
+            ':wp': '0'},
         ReturnValues="UPDATED_NEW"
     )
     print("Added new player called:",player)

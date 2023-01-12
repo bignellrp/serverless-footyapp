@@ -45,7 +45,6 @@ def calc_wins(player):
     result = duckdb.query(sql)
     result = str(result).strip()
     result = result[-2:].strip()
-    #print(f'Calulated {player}s wins as {result}')
     return result
 
 def calc_draws(player):
@@ -67,7 +66,6 @@ def calc_draws(player):
     result = duckdb.query(sql)
     result = str(result).strip()
     result = result[-2:].strip()
-    #print(f'Calulated {player}s draws as {result}')
     return result
 
 def calc_losses(player):
@@ -89,5 +87,4 @@ def calc_losses(player):
     result = duckdb.query(sql)
     result = str(result).strip()
     result = result[-2:].strip()
-    #print(f'Calulated {player}s losses as {result}')
     return result

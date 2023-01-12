@@ -5,269 +5,125 @@ import boto3
 player_table = boto3.resource('dynamodb').Table('player_table')
 results_table = boto3.resource('dynamodb').Table('results_table')
 dynamodb = boto3.client('dynamodb')
+player_class = player()
+result = results()
 
-# def swap_player(players):
-#     '''Takes in a list of two players
-#     finds their score and swaps them 
-#     in the results table'''
+def swap_player(players):
+    '''Takes in a list of two players
+    finds their score and swaps them 
+    in the results table'''
+    all_players = player_class.all_players
+    player_current = players[0]
+    player_new = players[1]
 
-#     # result = results()
-#     # df = result.all_results()
-#     # last_row = df.loc[df['Date'] == next_wednesday]
-#     # result = df.loc[df['Team A Player 1'].str.contains(pat = 'Bernard')]
-#     # print(result)
+    for name, total in all_players:
+        if name == player_current:
+            player_current_score = total
 
-#     c = conn.cursor()
-#     #Find the Current Players name and the row
-#     #player_current = ws_players.find(player[0])
-#     player_current = players[0]
+    for name, total in all_players:
+        if name == player_new:
+            player_new_score = total
 
-#     #Find the New Players name and the row
-#     #player_new = ws_players.find(player[1]) 
-#     player_new = players[1]
+    #Work out difference between player scores
+    player_score_difference = int(player_current_score) \
+                                  - int(player_new_score)
+    
+    teamb = result.teamb()
+    if player_current in teamb : 
+        team = "B"
+        team_result = result.totalb
+        index = result.teamb
+    else:
+        team = "A"
+        team_result = result.totala
+        index = result.teama
 
-#     #Find the Total column
-#     #clm_total = ws_players.find('Total')
+    #Find index of player in team
+    index = index.index(player_current)
+    index = int(index) + 1
 
-#     #Convert Total Col Number to a Letter
-#     #clm_total = colnum_string(clm_total.col) 
+    #Find the score from Team A or B
+    col_result_num = f'Team {team} Total'
+    col_player = f'Team {team} Player {index}'
 
-#     #Combine Col letter and row num into range
-#     #player_current_range = str(clm_total)+str(player_current.row)
+    #New Result is current result minus difference
+    new_result = int(team_result) - player_score_difference 
 
-#     #Combine Col letter and row num into range
-#     #player_new_range = str(clm_total)+str(player_new.row) 
+    ##Update values with new player and new score,
+    ##using date as the key
 
-#     #Grab score cell using range
-#     #player_current_score = ws_players.acell(player_current_range).value 
-#     player_current_score = c.execute(
-#         'SELECT "Total" FROM players WHERE "Name" = ?;', (players[0], ))
-#     player_current_score = c.fetchone()
-#     player_current_score = player_current_score[0]
-#     #Grab score cell using range
-#     #player_new_score = ws_players.acell(player_new_range).value 
-#     player_new_score = c.execute(
-#         'SELECT "Total" FROM players WHERE "Name" = ?;', (players[1], ))
-#     player_new_score = c.fetchone()
-#     player_new_score = player_new_score[0]
-#     #Work out difference between player scores
-#     player_score_difference = int(player_current_score) \
-#                                   - int(player_new_score)
+    results_table.update_item(   
+        Key={'Date': next_wednesday},
+        AttributeUpdates={
+            col_result_num: new_result,
+            col_player: player_new,
+        },
+    )
+    print("Swapped player and updated score")
+    return
 
-#     # print(f"The difference between player \
-#     #     scores is {player_score_difference}")
-#     #row = ws_results.find('-') #Find the row with dash
+def swap_existing_player(players):
+    '''Takes in a list of two players
+    finds their score and swaps them 
+    in the results table if players
+    are both playing'''
 
-#     #Find the Current Players name on the row with a dash
-#     #player_current = ws_results.find(player[0], in_row=row.row) 
+    all_players = player_class.all_players
+    player_current = players[0]
+    player_new = players[1]
 
-#     #If player col number > 10 E.g. above J then team is B  
-#     # if player_current.col > 10 : 
-#     #     team = "B"
-#     # else:
-#     #     team = "A"
-#     result = results()
-#     teamb = result.teamb()
-#     if player_current in teamb : 
-#         team = "B"
-#     else:
-#         team = "A"
-#     #Find the column with the score from Team A or B
-#     #col_result_num = ws_results.find('Team ' + team + ' Total')
-#     #col_result_num = f'"Team " + {team} + " Total"'
-#     col_result_num = f'Team {team} Total'
-#     col_player1 = f'Team {team} Player 1'
-#     col_player2 = f'Team {team} Player 2'
-#     col_player3 = f'Team {team} Player 3'
-#     col_player4 = f'Team {team} Player 4'
-#     col_player5 = f'Team {team} Player 5'
+    for name, total in all_players:
+        if name == player_current:
+            player_current_score = total
 
-#     #Convert Col Number to a Letter
-#     #col_result = colnum_string(col_result_num.col) 
+    for name, total in all_players:
+        if name == player_new:
+            player_new_score = total
 
-#     #Combine Col letter and row num into range
-#     #team_result_range = str(col_result)+str(row.row) 
+    #Work out difference between player scores
+    player_score_difference = int(player_current_score) \
+                                  - int(player_new_score)
 
-#     #Grab current score for Team A or B
-#     #team_result = ws_results.acell(team_result_range).value
+    teamb = result.teamb()
+    if player_current in teamb : 
+        team_curr = "B"
+        team_new = "A"
+        current_index = result.teamb()
+        new_index = result.teama()
+    else:
+        team_curr = "A"
+        team_new = "B"
+        current_index = result.teama()
+        new_index = result.teamb()
 
-#     team_result = c.execute(
-#         f'SELECT "{col_result_num}" FROM results WHERE "Date" = "{next_wednesday}"')
-#     team_result = c.fetchone()
-#     team_result = team_result[0]
-#     #New Result is current result minus difference
-#     new_result = int(team_result) - player_score_difference 
+    #Find index of player in team
+    current_index = current_index.index(player_current)
+    current_index = int(current_index) + 1
+    new_index = new_index.index(player_new)
+    new_index = int(new_index) + 1
 
-#     ##Update cell with new score,
-#     ##using the row with the dash,
-#     ##and column with Team Result
-#     #ws_results.update_cell(row.row, col_result_num.col, new_result)
-#     c.execute(f'UPDATE results SET "{col_result_num}" = {new_result} WHERE "Date" = "{next_wednesday}"')
+    #Constructing the Attribute Name
+    curr_player = f'Team {team_curr} Player {current_index}'
+    new_player = f'Team {team_new} Player {new_index}'
 
-#     ##Update cell with new player,
-#     ##using the row with the dash,
-#     ##and column with Player Current
-#     #ws_results.update_cell(row.row, player_current.col, player[1])
-#     c.execute(f'UPDATE results SET "{col_player1}" = "{player_new}" WHERE "Date" = "{next_wednesday}" AND "{col_player1}" = "{player_current}"')
-#     c.execute(f'UPDATE results SET "{col_player2}" = "{player_new}" WHERE "Date" = "{next_wednesday}" AND "{col_player2}" = "{player_current}"')
-#     c.execute(f'UPDATE results SET "{col_player3}" = "{player_new}" WHERE "Date" = "{next_wednesday}" AND "{col_player3}" = "{player_current}"')
-#     c.execute(f'UPDATE results SET "{col_player4}" = "{player_new}" WHERE "Date" = "{next_wednesday}" AND "{col_player4}" = "{player_current}"')
-#     c.execute(f'UPDATE results SET "{col_player5}" = "{player_new}" WHERE "Date" = "{next_wednesday}" AND "{col_player5}" = "{player_current}"')
+    #New Result is current result minus difference
+    new_result_a = int(result.totala) - player_score_difference
 
-#     print("Swapped player and updated score")
-#     return
+    #New Result is current result minus difference
+    new_result_b = int(result.totalb) - player_score_difference
 
-# def swap_existing_player(players):
-#     '''Takes in a list of two players
-#     finds their score and swaps them 
-#     in the results table if players
-#     are both playing'''
+    #Update values with new player and new score,
+    #using date as the key
+    #and with curr player swapped with new player
 
-#     c = conn.cursor()
-#     #Find the Current Players name and the row
-#     #player_current = ws_players.find(player[0])
-#     player_current = players[0]
-
-#     #Find the New Players name and the row
-#     #player_new = ws_players.find(player[1])
-#     player_new = players[1]
-
-#     #Find the Total column
-#     #clm_total = ws_players.find('Total')
-
-#     #Convert Total Col Number to a Letter
-#     #clm_total = colnum_string(clm_total.col) 
-
-#     #Combine Col letter and row num into range
-#     #player_current_range = str(clm_total)+str(player_current.row)
-
-#     #Combine Col letter and row num into range
-#     #player_new_range = str(clm_total)+str(player_new.row) 
-
-#     #Grab score cell using range
-#     #player_current_score = ws_players.acell(player_current_range).value 
-
-#     #Grab score cell using range
-#     #player_new_score = ws_players.acell(player_new_range).value 
-
-#     #Work out difference between player scores
-#     #player_score_difference = int(player_current_score) \
-#     #                              - int(player_new_score)
-
-#     #print(f"The difference between player \
-#     #    scores is {player_score_difference}")
-#     #row = ws_results.find('-') #Find the row with dash
-
-#     # #Find the Current Players name on the row with a dash
-#     # player_current = ws_results.find(player[0], in_row=row.row) 
-
-#     # #Find the New Players name on the row with a dash
-#     # player_new = ws_results.find(player[1], in_row=row.row) 
-
-#     #Grab score cell using range
-#     #player_current_score = ws_players.acell(player_current_range).value 
-#     player_current_score = c.execute(
-#         'SELECT "Total" FROM players WHERE "Name" = ?;', (players[0], ))
-#     player_current_score = c.fetchone()
-#     player_current_score = player_current_score[0]
-#     #Grab score cell using range
-#     #player_new_score = ws_players.acell(player_new_range).value 
-#     player_new_score = c.execute(
-#         'SELECT "Total" FROM players WHERE "Name" = ?;', (players[1], ))
-#     player_new_score = c.fetchone()
-#     player_new_score = player_new_score[0]
-#     #Work out difference between player scores
-#     player_score_difference = int(player_current_score) \
-#                                   - int(player_new_score)
-
-#     # #If player col number > 10 E.g. above J then team is B  
-#     # if player_current.col > 10 : 
-#     #     team_curr = "B"
-#     #     team_new = "A"
-#     # else:
-#     #     team_curr = "A"
-#     #     team_new = "B"
-
-#     result = results()
-#     teamb = result.teamb()
-#     if player_current in teamb : 
-#         team_curr = "B"
-#         team_new = "A"
-#     else:
-#         team_curr = "A"
-#         team_new = "B"
-
-#     curr_player1 = f'Team {team_curr} Player 1'
-#     curr_player2 = f'Team {team_curr} Player 2'
-#     curr_player3 = f'Team {team_curr} Player 3'
-#     curr_player4 = f'Team {team_curr} Player 4'
-#     curr_player5 = f'Team {team_curr} Player 5'
-#     new_player1 = f'Team {team_new} Player 1'
-#     new_player2 = f'Team {team_new} Player 2'
-#     new_player3 = f'Team {team_new} Player 3'
-#     new_player4 = f'Team {team_new} Player 4'
-#     new_player5 = f'Team {team_new} Player 5'
-
-#     # #Find the column with the score from Team A or B
-#     # col_result_num_a = ws_results.find('Team ' + team_curr + ' Total')
-
-#     # #Find the column with the score from Team A or B
-#     # col_result_num_b = ws_results.find('Team ' + team_new + ' Total') 
-
-#     # #Convert Col Number to a Letter
-#     # col_result_a = colnum_string(col_result_num_a.col)
-
-#     # #Convert Col Number to a Letter
-#     # col_result_b = colnum_string(col_result_num_b.col)
-
-#     # #Combine Col letter and row num into range
-#     # team_result_range_a = str(col_result_a)+str(row.row)
-
-#     # #Combine Col letter and row num into range
-#     # team_result_range_b = str(col_result_b)+str(row.row)
-
-#     # #Grab current score for Team A
-#     # team_result_a = ws_results.acell(team_result_range_a).value
-#     team_result_a = c.execute(
-#         f'SELECT "Team A Total" FROM results WHERE "Date" = "{next_wednesday}"')
-#     team_result_a = c.fetchone()
-#     team_result_a = team_result_a[0]
-
-#     # #Grab current score for Team B
-#     # team_result_b = ws_results.acell(team_result_range_b).value
-#     team_result_b = c.execute(
-#         f'SELECT "Team B Total" FROM results WHERE "Date" = "{next_wednesday}"')
-#     team_result_b = c.fetchone()
-#     team_result_b = team_result_b[0]
-
-#     # #New Result is current result minus difference
-#     new_result_a = int(team_result_a) - player_score_difference
-
-#     # #New Result is current result minus difference
-#     new_result_b = int(team_result_b) - player_score_difference
-
-#     # ##Update cell with new score,
-#     # ##using the row with the dash,
-#     # ##and column with Team Result
-#     # ws_results.update_cell(row.row, col_result_num_a.col, new_result_a)
-#     # ws_results.update_cell(row.row, col_result_num_b.col, new_result_b)
-#     c.execute(f'UPDATE results SET "Team A Total" = {new_result_a} WHERE "Date" = "{next_wednesday}"')
-#     c.execute(f'UPDATE results SET "Team B Total" = {new_result_b} WHERE "Date" = "{next_wednesday}"')
-
-#     # ##Update cell with new player,
-#     # ##using the row with the dash,
-#     # ##and column with Player Current/New
-#     # ws_results.update_cell(row.row, player_current.col, player[1])
-#     # ws_results.update_cell(row.row, player_new.col, player[0])
-#     c.execute(f'UPDATE results SET "{curr_player1}" = "{player_new}" WHERE "Date" = "{next_wednesday}" AND "{curr_player1}" = "{player_current}"')
-#     c.execute(f'UPDATE results SET "{curr_player2}" = "{player_new}" WHERE "Date" = "{next_wednesday}" AND "{curr_player2}" = "{player_current}"')
-#     c.execute(f'UPDATE results SET "{curr_player3}" = "{player_new}" WHERE "Date" = "{next_wednesday}" AND "{curr_player3}" = "{player_current}"')
-#     c.execute(f'UPDATE results SET "{curr_player4}" = "{player_new}" WHERE "Date" = "{next_wednesday}" AND "{curr_player4}" = "{player_current}"')
-#     c.execute(f'UPDATE results SET "{curr_player5}" = "{player_new}" WHERE "Date" = "{next_wednesday}" AND "{curr_player5}" = "{player_current}"')
-#     c.execute(f'UPDATE results SET "{new_player1}" = "{player_current}" WHERE "Date" = "{next_wednesday}" AND "{new_player1}" = "{player_new}"')
-#     c.execute(f'UPDATE results SET "{new_player2}" = "{player_current}" WHERE "Date" = "{next_wednesday}" AND "{new_player2}" = "{player_new}"')
-#     c.execute(f'UPDATE results SET "{new_player3}" = "{player_current}" WHERE "Date" = "{next_wednesday}" AND "{new_player3}" = "{player_new}"')
-#     c.execute(f'UPDATE results SET "{new_player4}" = "{player_current}" WHERE "Date" = "{next_wednesday}" AND "{new_player4}" = "{player_new}"')
-#     c.execute(f'UPDATE results SET "{new_player5}" = "{player_current}" WHERE "Date" = "{next_wednesday}" AND "{new_player5}" = "{player_new}"')
-#     print("Swapped player and updated score")
-#     return
+    results_table.update_item(   
+        Key={'Date': next_wednesday},
+        AttributeUpdates={
+            'Team A Total': new_result_a,
+            'Team B Total': new_result_b,
+            curr_player: player_new,
+            new_player: player_current,
+        },
+    )
+    print("Swapped player and updated score")
+    return

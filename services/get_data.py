@@ -184,6 +184,7 @@ class results():
                                 'Team A Colour',
                                 'Team B Colour'])
         self.df['Date'] = pd.to_datetime(self.df.Date, format='%Y%m%d', errors='ignore')
+        self.df = self.df.sort_values(by=['Date'], ascending=True)
 
     def all_results(self):
         '''Get all results including column names'''

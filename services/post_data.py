@@ -80,7 +80,6 @@ def update_result(values):
         ReturnValues="UPDATED_NEW"
     )
     wipe_tally()
-    update_formulas()
     return
 
 def append_result(values):
@@ -111,7 +110,6 @@ def append_result(values):
         }
     )
     wipe_tally()
-    update_formulas()
     return
 
 def update_score_result(values):

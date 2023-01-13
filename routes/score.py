@@ -1,5 +1,5 @@
 from flask import render_template, request, Blueprint
-#import services.post_spread as post
+import services.post_data as post
 from services.get_data import results
 import re
 
@@ -54,7 +54,7 @@ def score():
             error = "Score is not a valid input"
         else:
             print("Updating score")
-            #result = post.update_score_result(score_output)
+            result = post.update_score_result(score_output)
             
             ##If there is a dash then post is returned after running update
             return render_template('post.html')

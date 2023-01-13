@@ -3,11 +3,18 @@ app: serverless-footyapp
 service: serverless-footyapp
 frameworkVersion: '3'
 
+package:
+  exclude:
+    - node_modules/**
+    - venv/**
+
 custom:
   playertableName: 'player_table'
   resultstableName: 'results_table'
   wsgi:
     app: app.app
+  pythonRequirements:
+    dockerizePip: true
 
 provider:
   name: aws
@@ -30,6 +37,8 @@ provider:
   environment:
     PLAYER_TABLE: ${self:custom.playertableName}
     RESULTS_TABLE: ${self:custom.resultstableName}
+    ##https://stackoverflow.com/questions/72539862/aws-lambda-adds-default-to-the-path-of-flasgger-apispec
+    STRIP_STAGE_PATH: yes
 
 functions:
   api:

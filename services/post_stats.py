@@ -1,5 +1,5 @@
 from services.get_data import results
-from services.calc_stats import calc_draws,calc_wins,calc_losses
+from services.calc_stats import calc_wdl
 import boto3
 
 player_table = boto3.resource('dynamodb').Table('player_table')
@@ -10,9 +10,10 @@ played_thisweek = result.teama() + result.teamb()
 def update_formulas():
     '''Updates formulas'''
     for name in played_thisweek:
-        wins = calc_wins(name)
-        draws = calc_draws(name)
-        losses = calc_losses(name)
+        calc = calc_wdl(name)
+        wins = calc[0]
+        draws = calc[1]
+        losses = calc[2]
         score = int(wins) * 3 + int(draws)
         played = int(wins) + int(draws) + int(losses)
         percentage = int(wins) / int(played) * 100

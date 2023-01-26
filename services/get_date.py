@@ -13,3 +13,11 @@ d = date.today()
 ##Games are played on wednesday 
 ##so returns next wednesday's date
 next_wednesday = next_weekday(d, 2).isoformat()
+
+def find_closest_wednesday(date):
+    WEDNESDAY = 3
+    year, week, day = date.isocalendar()
+    delta = datetime.timedelta(days=WEDNESDAY-day)
+    return date + delta
+today = datetime.date.today()
+closest_wednesday = find_closest_wednesday(today)

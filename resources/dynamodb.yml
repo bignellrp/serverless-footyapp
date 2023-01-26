@@ -16,12 +16,8 @@ Resources:
       AttributeDefinitions:
         - AttributeName: Date
           AttributeType: S
-        - AttributeName: 'Team A Result?'
-          AttributeType: S
       KeySchema:
         - AttributeName: Date
           KeyType: HASH
-        - AttributeName: 'Team A Result?'
-          KeyType: RANGE
       BillingMode: PAY_PER_REQUEST
       TableName: results_table

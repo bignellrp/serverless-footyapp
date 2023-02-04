@@ -8,3 +8,7 @@ package.json
 .serverless-wsgi
 .gitignore
 wsgi_handler.py
+input_player_data.csv
+input_results_data.csv
+input_player_data_new.json
+input_results_data_new.json

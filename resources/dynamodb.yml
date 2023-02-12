@@ -1,0 +1,23 @@
+Resources:
+  PlayerTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: Name
+          AttributeType: S
+      KeySchema:
+        - AttributeName: Name
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      TableName: player_table
+  ResultsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: Date
+          AttributeType: S
+      KeySchema:
+        - AttributeName: Date
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      TableName: results_table

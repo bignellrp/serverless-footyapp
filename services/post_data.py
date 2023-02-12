@@ -1,4 +1,4 @@
-from services.get_date import next_wednesday
+from services.get_date import next_wednesday, closest_wednesday
 from services.get_data import player
 from services.post_stats import update_formulas
 import boto3
@@ -133,93 +133,21 @@ def update_score_result(values):
     from a list of two values.'''
     try:
         results_table.update_item(   
-            Key={'Date': next_wednesday},
+            Key={'Date': closest_wednesday},
             UpdateExpression="set #1=:1, #2=:2",
+            ConditionExpression="#1=:3",
             ExpressionAttributeNames={
                 '#1': 'Team A Result?',
                 '#2': 'Team B Result?'},
             ExpressionAttributeValues={
                 ':1': values[0],
-                ':2': values[1]},
+                ':2': values[1],
+                ':3': '-'},
             ReturnValues="UPDATED_NEW"
         )
     except Exception as msg:
         print(f"Oops, could not update: {msg}")
     update_formulas()
-    return
-
-def update_scorea(value):
-    '''Function to update the result using 
-    the values from the results page
-    Takes in value to be added to the table updates item'''
-    try:
-        results_table.update_item(   
-            Key={'Date': next_wednesday},
-            UpdateExpression="set #1=:1",
-            ExpressionAttributeNames={
-                '#1': 'Team A Result?'},
-            ExpressionAttributeValues={
-                ':1': value},
-            ReturnValues="UPDATED_NEW"
-        )
-    except Exception as msg:
-        print(f"Oops, could not update: {msg}")
-    update_formulas()
-    return
-
-def update_scoreb(value):
-    '''Function to update the result using 
-    the values from the results page
-    Takes in value to be added to the table updates item'''
-    try:
-        results_table.update_item(   
-            Key={'Date': next_wednesday},
-            UpdateExpression="set #1=:1",
-            ExpressionAttributeNames={
-                '#1': 'Team B Result?'},
-            AttributeUpdates={
-                ':1': value},
-            ReturnValues="UPDATED_NEW"
-        )
-    except Exception as msg:
-        print(f"Oops, could not update: {msg}")
-    update_formulas()
-    return
-
-def update_coloura(value):
-    '''Function to update the result using 
-    the values from the results page
-    Takes in value to be added to the table updates item'''
-    try:
-        results_table.update_item(   
-            Key={'Date': next_wednesday},
-            UpdateExpression="set #1=:1",
-            ExpressionAttributeNames={
-                '#1': 'Team A Colour'},
-            AttributeUpdates={
-                ':1': value},
-            ReturnValues="UPDATED_NEW"
-        )
-    except Exception as msg:
-        print(f"Oops, could not update: {msg}")
-    return
-
-def update_colourb(value):
-    '''Function to update the result using 
-    the values from the results page
-    Takes in value to be added to the table updates item'''
-    try:
-        results_table.update_item(   
-            Key={'Date': next_wednesday},
-            UpdateExpression="set #1=:1",
-            ExpressionAttributeNames={
-                '#1': 'Team B Colour'},
-            AttributeUpdates={
-                ':1': value},
-            ReturnValues="UPDATED_NEW"
-        )
-    except Exception as msg:
-        print(f"Oops, could not update: {msg}")
     return
 
 def update_playing_status(player):

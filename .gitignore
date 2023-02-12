@@ -2,5 +2,13 @@ node_modules
 .serverless
 */__pycache__/*
 serverless_sdk
-package*.json
 s_api.py
+package-lock.json
+package.json
+.serverless-wsgi
+.gitignore
+wsgi_handler.py
+input_player_data.csv
+input_results_data.csv
+input_player_data_new.json
+input_results_data_new.json

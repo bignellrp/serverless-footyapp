@@ -149,32 +149,3 @@ def update_score_result(values):
         print(f"Oops, could not update: {msg}")
     update_formulas()
     return
-
-def update_playing_status(player):
-    '''Takes in a player 
-    and adds x into the playing column'''
-    try:
-        player_table.update_item(
-            Key={'Name': player},
-            UpdateExpression="set Playing=:p",
-            ExpressionAttributeValues={
-                ':p': 'x'},
-            ReturnValues="UPDATED_NEW"
-        )
-    except Exception as msg:
-        print(f"Oops, could not update: {msg}")
-    print("Updated playing status for:",player)
-    return
-
-def modify_playing_status(player):
-    '''Takes in a player
-    and adds o into the playing column'''
-    player_table.update_item(
-        Key={'Name': player},
-        UpdateExpression="set Playing=:p",
-        ExpressionAttributeValues={
-            ':p': 'o'},
-        ReturnValues="UPDATED_NEW"
-    )
-    print("Modified playing status for:",player)
-    return

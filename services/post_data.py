@@ -1,6 +1,6 @@
 from services.get_date import next_wednesday, closest_wednesday
 from services.get_data import player
-from services.post_stats import update_formulas
+#from services.post_stats import update_formulas
 import boto3
 
 player_table = boto3.resource('dynamodb').Table('player_table')
@@ -147,5 +147,5 @@ def update_score_result(values):
         )
     except Exception as msg:
         print(f"Oops, could not update: {msg}")
-    update_formulas()
+    #update_formulas()
     return
